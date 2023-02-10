@@ -4,8 +4,7 @@
 // http://www.opensource.org/licenses/mit-license.php
 
 #include <algorithm>
-#include <complex>
-#include <cstdlib>
+#include <cstdint>
 #include <cstring>
 #include <filesystem>
 #include <iomanip>
@@ -13,13 +12,10 @@
 #include <iterator>
 #include <regex>
 #include <stdexcept>
-#include <stdint.h>
 
 #include <boost/endian/conversion.hpp>
 
-#ifndef NO_LIBZIP
 #include <zip.h>
-#endif
 
 #include "cnpy++.hpp"
 
@@ -44,7 +40,7 @@ bool cnpypp::_exists(std::string const& fname) {
 
 static std::regex const num_regex("[0-9][0-9]*");
 static std::regex const
-    dtype_tuple_regex("\\('(\\w+)', '([<>|])([a-zA-z])(\\d+)'\\)");
+    dtype_tuple_regex(R"(\('(\w+)', '([<>|])([a-zA-z])(\d+)'\))");
 
 void cnpypp::parse_npy_header(std::istream::char_type const* buffer,
                               std::vector<size_t>& word_sizes,
