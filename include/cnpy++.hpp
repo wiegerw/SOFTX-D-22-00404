@@ -31,15 +31,8 @@
 #include <zip.h>
 #endif
 
-#if defined(MSGSL_SPAN)
-#include <gsl/span>
-#elif defined(GSL_LITE_SPAN)
 #include <gsl-lite/gsl-lite.hpp>
-#elif defined(BOOST_SPAN)
-#include <boost/core/span.hpp>
-#else
-#include <span>
-#endif
+// #include <span>
 
 #include <cnpy++.h>
 #include <cnpy++/buffer.hpp>
@@ -49,15 +42,8 @@
 
 namespace cnpypp {
 template <typename T>
-#if defined(MSGSL_SPAN)
 using span = gsl::span<T>;
-#elif defined(GSL_LITE_SPAN)
-using span = gsl_lite::span<T>;
-#elif defined(BOOST_SPAN)
-using span = boost::span<T>;
-#else
-using span = std::span<T>;
-#endif
+// using span = std::span<T>;
 
 namespace detail {
 struct additional_parameters {
