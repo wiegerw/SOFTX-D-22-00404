@@ -7,6 +7,7 @@
 #include <complex>
 #include <cstdlib>
 #include <cstring>
+#include <filesystem>
 #include <iomanip>
 #include <iostream>
 #include <iterator>
@@ -15,8 +16,6 @@
 #include <stdint.h>
 
 #include <boost/endian/conversion.hpp>
-#include <boost/filesystem.hpp>
-#include <boost/iostreams/device/mapped_file.hpp>
 
 #ifndef NO_LIBZIP
 #include <zip.h>
@@ -40,7 +39,7 @@ std::vector<char>& cnpypp::append(std::vector<char>& vec,
 }
 
 bool cnpypp::_exists(std::string const& fname) {
-  return boost::filesystem::exists(fname);
+  return std::filesystem::exists(fname);
 }
 
 static std::regex const num_regex("[0-9][0-9]*");
