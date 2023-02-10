@@ -11,9 +11,6 @@
 #include <string>
 #include <string_view>
 
-#include <boost/iterator/zip_iterator.hpp>
-#include <boost/type_index.hpp>
-
 #include "cnpy++.hpp"
 
 static const int Nx = 2;
