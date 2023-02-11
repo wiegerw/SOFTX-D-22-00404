@@ -3,12 +3,10 @@
 #include <cstddef>
 #include <cstdlib>
 #include <functional>
-#include <iomanip>
 #include <iostream>
 #include <list>
 #include <map>
 #include <numeric>
-#include <string>
 #include <string_view>
 
 #include "cnpy++.hpp"
@@ -34,7 +32,7 @@ int main() {
 
   // load it into a new array
   {
-    cnpypp::NpyArray const arr = cnpypp::npy_load("arr1.npy", true);
+    cnpypp::NpyArray const arr = cnpypp::npy_load("arr1.npy");
     auto const* const loaded_data = arr.data<uint32_t>();
 
     // make sure the loaded data matches the saved data
@@ -103,7 +101,7 @@ int main() {
                      {tupleVec.size()});
 
     // load memory-mapped
-    cnpypp::NpyArray arr = cnpypp::npy_load("structured.npy", true);
+    cnpypp::NpyArray arr = cnpypp::npy_load("structured.npy");
     auto r = arr.tuple_range<int32_t, int8_t, int16_t>();
 
     if (!std::equal(tupleVec.begin(), tupleVec.end(), r.begin())) {
@@ -122,7 +120,7 @@ int main() {
                      {arrVec.size()});
 
     // load memory-mapped
-    cnpypp::NpyArray arr = cnpypp::npy_load("structured2.npy", true);
+    cnpypp::NpyArray arr = cnpypp::npy_load("structured2.npy");
     auto r = arr.tuple_range<int8_t, int8_t>();
 
     if (!std::equal(arrVec.begin(), arrVec.end(), r.begin(),

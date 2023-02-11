@@ -352,8 +352,8 @@ cnpypp::NpyArray cnpypp::npz_load(std::string const& fname,
 }
 #endif
 
-cnpypp::NpyArray cnpypp::npy_load(std::string const& fname,
-                                  bool memory_mapped) {
+cnpypp::NpyArray cnpypp::npy_load(std::string const& fname)
+{
   std::ifstream fs{fname, std::ios::binary};
 
   if (!fs)
@@ -375,12 +375,8 @@ cnpypp::NpyArray cnpypp::npy_load(std::string const& fname,
 
   std::unique_ptr<Buffer> buffer;
 
-  if (!memory_mapped) {
-    buffer = std::make_unique<InMemoryBuffer>(num_bytes);
-    fs.read(reinterpret_cast<char*>(buffer->data()), num_bytes);
-  } else {
-    buffer = std::make_unique<MemoryMappedBuffer>(fname, fs.tellg(), num_bytes);
-  }
+  buffer = std::make_unique<InMemoryBuffer>(num_bytes);
+  fs.read(reinterpret_cast<char*>(buffer->data()), num_bytes);
 
   return cnpypp::NpyArray{std::move(shape), std::move(word_sizes),
                           std::move(labels), memory_order, std::move(buffer)};

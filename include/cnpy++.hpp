@@ -9,6 +9,7 @@
 #include <array>
 #include <cassert>
 #include <climits>
+#include <cstdint>
 #include <cstring>
 #include <fstream>
 #include <functional>
@@ -19,17 +20,14 @@
 #include <numeric>
 #include <sstream>
 #include <stdexcept>
-#include <stdint.h>
 #include <string>
 #include <string_view>
 #include <utility>
 #include <vector>
 
-#include <boost/endian/buffers.hpp>
+#include "boost/endian/buffers.hpp"
 
-#ifndef NO_LIBZIP
 #include <zip.h>
-#endif
 
 #include <gsl-lite/gsl-lite.hpp>
 // #include <span>
@@ -51,11 +49,10 @@ struct additional_parameters {
       std::vector<char>&& _npyheader, size_t size,
       std::function<size_t(cnpypp::span<char>, additional_parameters*)> _func)
       : npyheader{std::move(_npyheader)},
-        header_bytes_remaining{npyheader.size()}, buffer_capacity{size},
+        header_bytes_remaining{npyheader.size()},
         buffer{std::make_unique<char[]>(size)}, func{_func} {}
 
   std::vector<char> const npyheader;
-  size_t const buffer_capacity;
 
   size_t header_bytes_remaining, bytes_buffer_written = 0, buffer_size = 0;
   std::unique_ptr<char[]> const buffer;
@@ -77,7 +74,7 @@ enum class MemoryOrder {
 
 struct NpyArray {
   NpyArray(NpyArray&& other)
-      : shape{std::move(other.shape)}, word_sizes{std::move(other.word_sizes)},
+      : shape{other.shape}, word_sizes{std::move(other.word_sizes)},
         memory_order{other.memory_order}, num_vals{other.num_vals},
         total_value_size{other.total_value_size}, buffer{std::move(
                                                       other.buffer)} {}
@@ -286,7 +283,7 @@ npz_t npz_load(std::string const& fname);
 
 NpyArray npz_load(std::string const& fname, std::string const& varname);
 
-NpyArray npy_load(std::string const& fname, bool memory_mapped = false);
+NpyArray npy_load(std::string const& fname);
 
 template <typename TConstInputIterator>
 bool constexpr is_contiguous_v =
