@@ -6,7 +6,7 @@
 
 Eigen::MatrixXf load_eigen_matrix(const std::string& filename)
 {
-  std::cout << "Loading matrix from " << filename << std::endl;
+  std::cout << "C++: loading matrix from " << filename << std::endl;
   cnpypp::NpyArray array = cnpypp::npy_load(filename);
   const auto& shape = array.shape;
   return Eigen::Map<Eigen::MatrixXf>(array.data<float>(), shape[0], shape[1]);
@@ -14,8 +14,8 @@ Eigen::MatrixXf load_eigen_matrix(const std::string& filename)
 
 void save_eigen_matrix(const std::string& filename, const Eigen::MatrixXf& A)
 {
-  std::cout << "Saving matrix to " << filename << std::endl;
-  cnpypp::npy_save(filename, &A.data()[0], {static_cast<unsigned long>(A.rows()), static_cast<unsigned long>(A.cols())}, "w");
+  std::cout << "C++ saving matrix to " << filename << std::endl;
+  cnpypp::npy_save(filename, &A.data()[0], {static_cast<unsigned long>(A.rows()), static_cast<unsigned long>(A.cols())}, "w", cnpypp::MemoryOrder::C);
 }
 
 void print_eigen_matrix(const Eigen::MatrixXf& A)
