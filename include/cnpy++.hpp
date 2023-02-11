@@ -25,7 +25,7 @@
 #include <utility>
 #include <vector>
 
-#include "boost/endian/buffers.hpp"
+#include <boost/endian/buffers.hpp>
 
 #include <zip.h>
 
@@ -248,7 +248,7 @@ using npz_t = std::map<std::string, NpyArray>;
 
 char BigEndianTest();
 
-bool _exists(std::string const&); // calls boost::filesystem::exists()
+bool _exists(std::string const&);
 
 std::vector<char> create_npy_header(cnpypp::span<size_t const> shape,
                                     char dtype, int size,

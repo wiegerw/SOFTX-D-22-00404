@@ -1,0 +1,13 @@
+project cnpy
+   : requirements
+       <include>include
+       <include>/usr/include/eigen3
+       <cxxflags>-std=c++17
+       <linkflags>-lzip
+   ;
+
+lib cnpy
+       :
+         src/cnpy++.cpp
+       :
+       ;

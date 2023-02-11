@@ -1,0 +1,19 @@
+project examples
+   : requirements
+       <library>/cnpy//cnpy
+   ;
+
+SOURCES = [ glob *.cpp ] ;
+
+for local src in $(SOURCES)
+{
+  local base = $(src[1]:B) ;
+  exe $(base) : $(src) : ;
+  EXES += $(base) ;
+}
+
+install dist
+  :
+    $(EXES)
+  ;
+
