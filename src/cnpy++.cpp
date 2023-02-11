@@ -241,7 +241,7 @@ cnpypp::NpyArray load_npy(zip_t* archive, zip_int64_t index) {
       word_sizes.begin(), word_sizes.end(), size_t{0}, std::plus<size_t>());
   auto const num_bytes = total_value_size * num_vals;
 
-  auto buffer = std::make_unique<InMemoryBuffer>(num_bytes);
+  auto buffer = std::make_unique<in_memory_buffer>(num_bytes);
 
   zip_int64_t const offset = fileinfo.size - num_bytes;
   if (fileinfo.size <= max_header_size) {
@@ -373,9 +373,9 @@ cnpypp::NpyArray cnpypp::npy_load(std::string const& fname)
       word_sizes.begin(), word_sizes.end(), size_t{0}, std::plus<size_t>());
   auto const num_bytes = total_value_size * num_vals;
 
-  std::unique_ptr<Buffer> buffer;
+  std::unique_ptr<buffer> buffer;
 
-  buffer = std::make_unique<InMemoryBuffer>(num_bytes);
+  buffer = std::make_unique<in_memory_buffer>(num_bytes);
   fs.read(reinterpret_cast<char*>(buffer->data()), num_bytes);
 
   return cnpypp::NpyArray{std::move(shape), std::move(word_sizes),

@@ -76,12 +76,12 @@ struct NpyArray {
   NpyArray(NpyArray&& other)
       : shape{other.shape}, word_sizes{std::move(other.word_sizes)},
         memory_order{other.memory_order}, num_vals{other.num_vals},
-        total_value_size{other.total_value_size}, buffer{std::move(
-                                                      other.buffer)} {}
+        total_value_size{other.total_value_size}, m_buffer{std::move(
+                                                      other.m_buffer)} {}
 
   NpyArray(std::vector<size_t> _shape, std::vector<size_t> _word_sizes,
            std::vector<std::string> _labels, MemoryOrder _memory_order,
-           std::unique_ptr<Buffer> _buffer)
+           std::unique_ptr<buffer> _buffer)
       : shape{std::move(_shape)},
         word_sizes{std::move(_word_sizes)}, labels{std::move(_labels)},
         memory_order{_memory_order}, num_vals{std::accumulate(
@@ -89,18 +89,18 @@ struct NpyArray {
                                          std::multiplies<size_t>())},
         total_value_size{std::accumulate(word_sizes.begin(), word_sizes.end(),
                                          size_t{0}, std::plus<size_t>())},
-        buffer{std::move(_buffer)} {}
+        m_buffer{std::move(_buffer)} {}
   //~ : std::make_unique<InMemoryBuffer>(total_value_size *
   //~ num_vals)} {}
 
   NpyArray(NpyArray const&) = delete;
 
   template <typename T> T* data() {
-    return reinterpret_cast<T*>(buffer->data());
+    return reinterpret_cast<T*>(m_buffer->data());
   }
 
   template <typename T> const T* data() const {
-    return reinterpret_cast<T const*>(buffer->data());
+    return reinterpret_cast<T const*>(m_buffer->data());
   }
 
   size_t num_bytes() const { return num_vals * total_value_size; }
@@ -144,9 +144,9 @@ struct NpyArray {
       throw std::runtime_error(
           "tuple_range: word sizes do not match requested types");
     } else {
-      return subrange{tuple_iterator<std::tuple<TArgs...>>{buffer->data()},
+      return subrange{tuple_iterator<std::tuple<TArgs...>>{m_buffer->data()},
                       tuple_iterator<std::tuple<TArgs...>>{
-                          buffer->data() + num_vals * total_value_size}};
+                          m_buffer->data() + num_vals * total_value_size}};
     }
   }
 
@@ -158,9 +158,9 @@ struct NpyArray {
           "tuple_range: word sizes do not match requested types");
     } else {
       return subrange{
-          tuple_iterator<add_const_t<std::tuple<TArgs...>>>{buffer.get()},
+          tuple_iterator<add_const_t<std::tuple<TArgs...>>>{m_buffer.get()},
           tuple_iterator<add_const_t<std::tuple<TArgs...>>>{
-              buffer->data() + num_vals * total_value_size}};
+              m_buffer->data() + num_vals * total_value_size}};
     }
   }
 
@@ -188,8 +188,8 @@ struct NpyArray {
                           std::next(word_sizes.cbegin(), d), std::ptrdiff_t{0});
 
       auto beg =
-          stride_iterator<TValueType>{buffer.get() + offset, total_value_size};
-      auto end = stride_iterator<TValueType>{buffer.get() + offset +
+          stride_iterator<TValueType>{m_buffer.get() + offset, total_value_size};
+      auto end = stride_iterator<TValueType>{m_buffer.get() + offset +
                                                  total_value_size * num_vals,
                                              total_value_size};
       return subrange{beg, end};
@@ -216,10 +216,10 @@ struct NpyArray {
           std::accumulate(word_sizes.cbegin(),
                           std::next(word_sizes.cbegin(), d), std::ptrdiff_t{0});
 
-      auto beg = stride_iterator<TValueType const>{buffer.get() + offset,
+      auto beg = stride_iterator<TValueType const>{m_buffer.get() + offset,
                                                    total_value_size};
       auto end = stride_iterator<TValueType const>{
-          buffer.get() + offset + total_value_size * num_vals,
+          m_buffer.get() + offset + total_value_size * num_vals,
           total_value_size};
       return subrange{beg, end};
     }
@@ -233,7 +233,7 @@ struct NpyArray {
   size_t const total_value_size;
 
 private:
-  std::unique_ptr<Buffer> buffer;
+  std::unique_ptr<buffer> m_buffer;
 
   template <typename... TArgs> bool compare_word_sizes() const {
     auto const& requested_type_sizes =

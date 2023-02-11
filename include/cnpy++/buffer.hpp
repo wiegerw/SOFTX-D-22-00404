@@ -10,31 +10,42 @@
 #include <memory>
 #include <string>
 
-//#include <boost/iostreams/device/mapped_file.hpp>
-
 namespace cnpypp {
-class Buffer {
-protected:
-  Buffer() = default;
 
-public:
-  virtual ~Buffer() = default;
-  virtual std::byte* data() = 0;
-  virtual std::byte const* data() const = 0;
+class buffer
+{
+  protected:
+    buffer() = default;
+
+  public:
+    virtual ~buffer() = default;
+    virtual std::byte* data() = 0;
+    [[nodiscard]] virtual std::byte const* data() const = 0;
 };
 
-class InMemoryBuffer : public Buffer {
-public:
-  explicit InMemoryBuffer(size_t size);
-  InMemoryBuffer(InMemoryBuffer const&) = delete;
-  InMemoryBuffer(InMemoryBuffer&&) = default;
-  ~InMemoryBuffer() = default;
+class in_memory_buffer : public buffer
+{
+  public:
+    explicit in_memory_buffer(size_t size)
+        : buffer{std::make_unique<std::byte[]>(size)}
+    {}
 
-  virtual std::byte* data() override;
-  virtual std::byte const* data() const override;
+    in_memory_buffer(in_memory_buffer const&) = delete;
+    in_memory_buffer(in_memory_buffer&&) = default;
+    ~in_memory_buffer() override = default;
 
-private:
-  std::unique_ptr<std::byte[]> buffer;
+    std::byte* data() override
+    {
+      return buffer.get();
+    };
+
+    [[nodiscard]] std::byte const* data() const override
+    {
+      return const_cast<std::byte*>(static_cast<in_memory_buffer const&>(*this).data());
+    }
+
+  private:
+    std::unique_ptr<std::byte[]> buffer;
 };
 
 } // namespace cnpypp

@@ -3,14 +3,17 @@
 This fork is an attempt to create a minimal version of cnpy++ without any dependencies.
 
 * The Boost filesystem dependency has been removed.
+* The Boost iostreams dependency has been removed.
 * The C interface has been removed.
+* The class MemoryMappedBuffer has been removed.
+* The Buffer class methods have been inlined.
+* The classes Buffer and InMemoryBuffer are renamed.
 * The ziplib library is a requirement now.
 * The gsl-lite type `gsl::span` is included (in the future `std::span` will be used).
 
 ### Todo
-* Include the Boost iostreams headers.
-* Eliminate unnecessary Boost dependencies from the iostreams headers.
 * Add examples of using the library in combination with Eigen.
+* Include the Boost endian headers.
 
 # cnpy++
 

@@ -9,7 +9,7 @@ find_package(libzip REQUIRED)
 
 include_directories(include)
 
-add_library(cnpy++ "src/cnpy++.cpp" "src/buffer.cpp")
+add_library(cnpy++ "src/cnpy++.cpp")
 target_link_libraries(cnpy++ PRIVATE libzip::zip)
 
 add_executable(example1 "examples/example1.cpp")
