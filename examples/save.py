@@ -24,7 +24,7 @@ if __name__ == '__main__':
     A = np.array([
       [1, 2, 3],
       [4, 5, 6]
-    ])
+    ], dtype=np.float32)
 
     save_eigen_matrix(filename, A)
     print_eigen_matrix(A)
