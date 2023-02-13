@@ -9,7 +9,7 @@ if __name__ == '__main__':
     npz_file = sys.argv[2]
 
     A = load(npy_file)
-    print_matrix(A)
+    print_matrix('A', A)
 
     data = load(npz_file)
     print_dict(data)

@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
   };
 
   save_npy(npy_file, A);
-  print_matrix(A);
+  print_matrix("A:", A);
 
   std::map<std::string, Eigen::MatrixXf> data;
   data["A"] = A;

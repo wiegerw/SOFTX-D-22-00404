@@ -22,7 +22,7 @@ if __name__ == '__main__':
     data = {'A': A, 'B': B}
 
     save_npy(npy_file, A)
-    print_matrix(A)
+    print_matrix('A', A)
 
     save_npz(npz_file, data)
     print_dict(data)

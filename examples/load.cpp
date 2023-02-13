@@ -8,7 +8,7 @@ int main(int argc, char* argv[])
   std::string npz_file = argv[2];
 
   Eigen::MatrixXf A = load_npy(npy_file);
-  print_matrix(A);
+  print_matrix("A:", A);
 
   std::map<std::string, Eigen::MatrixXf> data = load_npz(npz_file);
   print_dict(data);

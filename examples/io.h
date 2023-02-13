@@ -1,6 +1,8 @@
 #include <cstdlib>
+#include <iostream>
 #include <list>
 #include <map>
+#include <sstream>
 #include <Eigen/Dense>
 #include "cnpy++.hpp"
 
@@ -59,8 +61,26 @@ void save_npz(const std::string& filename, const std::map<std::string, Eigen::Ma
 }
 
 inline
-void print_matrix(const Eigen::MatrixXf& A)
+std::string print_list(const float* x, unsigned int n)
 {
+  std::ostringstream out;
+  out << "[";
+  for (unsigned int i = 0; i < n; ++i)
+  {
+    out << x[i];
+    if (i < n - 1)
+    {
+      out << ", ";
+    }
+  }
+  out << "]";
+  return out.str();
+}
+
+inline
+void print_matrix(const std::string& name, const Eigen::MatrixXf& A)
+{
+  std::cout << name << " raw data = " << print_list(A.data(), A.rows() * A.cols()) << std::endl;
   std::cout << A << std::endl;
 }
 
@@ -69,6 +89,6 @@ void print_dict(const std::map<std::string, Eigen::MatrixXf>& data)
 {
   for (const auto& [key, value]: data)
   {
-    std::cout << key << " ->\n" << value << std::endl;
+    std::cout << key << ": raw data = " << print_list(value.data(), value.rows() * value.cols()) << '\n' << value << std::endl;
   }
 }
