@@ -22,11 +22,15 @@ def print_list(A: np.ndarray):
     return f'[{", ".join(values)}]'
 
 
+def order(A: np.ndarray) -> str:
+    return 'row major' if A.flags['C_CONTIGUOUS'] else 'column major'
+
+
 def print_matrix(name: str, A: np.ndarray):
-    print(f'{name}: raw data = {print_list(A)}')
+    print(f'{name}: raw data = {print_list(A)} order = {order(A)}')
     print(A)
 
 
 def print_dict(data: Dict[str, np.ndarray]):
     for key, value in data.items():
-        print(f'{key}: raw data = {print_list(value)}\n{value}')
+        print(f'{key}: raw data = {print_list(value)} order = {order(value)}\n{value}')

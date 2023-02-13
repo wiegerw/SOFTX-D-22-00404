@@ -77,10 +77,23 @@ std::string print_list(const float* x, unsigned int n)
   return out.str();
 }
 
-inline
-void print_matrix(const std::string& name, const Eigen::MatrixXf& A)
+template <int MatrixLayout>
+std::string order(const Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, MatrixLayout>& A)
 {
-  std::cout << name << " raw data = " << print_list(A.data(), A.rows() * A.cols()) << std::endl;
+  if constexpr (MatrixLayout == Eigen::ColMajor)
+  {
+    return "column major";
+  }
+  else
+  {
+    return "row major";
+  }
+}
+
+template <int MatrixLayout>
+void print_matrix(const std::string& name, const Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, MatrixLayout>& A)
+{
+  std::cout << name << " raw data = " << print_list(A.data(), A.rows() * A.cols()) << " order = " << order(A) << std::endl;
   std::cout << A << std::endl;
 }
 
@@ -89,6 +102,6 @@ void print_dict(const std::map<std::string, Eigen::MatrixXf>& data)
 {
   for (const auto& [key, value]: data)
   {
-    std::cout << key << ": raw data = " << print_list(value.data(), value.rows() * value.cols()) << '\n' << value << std::endl;
+    std::cout << key << ": raw data = " << print_list(value.data(), value.rows() * value.cols()) << " order = " << order(value) << '\n' << value << std::endl;
   }
 }
