@@ -8,7 +8,7 @@ inline
 Eigen::MatrixXf to_eigen(const cnpypp::NpyArray& array)
 {
   const auto& shape = array.shape;
-  if (array.memory_order == cnpypp::MemoryOrder::C)
+  if (array.memory_order == cnpypp::MemoryOrder::RowMajor)
   {
     return Eigen::Map<const Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor>>(array.data<float>(), shape[1], shape[0]).transpose();
   }
@@ -30,7 +30,7 @@ inline
 void save_npy(const std::string& filename, const Eigen::MatrixXf& A)
 {
   std::cout << "C++ saving matrix to " << filename << std::endl;
-  cnpypp::npy_save(filename, &A.data()[0], {static_cast<unsigned long>(A.rows()), static_cast<unsigned long>(A.cols())}, "w", cnpypp::MemoryOrder::Fortran);
+  cnpypp::npy_save(filename, &A.data()[0], {static_cast<unsigned long>(A.rows()), static_cast<unsigned long>(A.cols())}, "w", cnpypp::MemoryOrder::ColumnMajor);
 }
 
 inline
@@ -54,7 +54,7 @@ void save_npz(const std::string& filename, const std::map<std::string, Eigen::Ma
   for (const auto& [key, value]: data)
   {
     std::vector<size_t> shape { static_cast<size_t>(value.rows()), static_cast<size_t>(value.cols()) };
-    cnpypp::npz_save(filename, key, value.data(), shape, "a", cnpypp::MemoryOrder::Fortran);
+    cnpypp::npz_save(filename, key, value.data(), shape, "a", cnpypp::MemoryOrder::ColumnMajor);
   }
 }
 
