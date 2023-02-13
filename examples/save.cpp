@@ -2,38 +2,31 @@
 #include <list>
 
 #include <Eigen/Dense>
-#include "cnpy++.hpp"
-
-Eigen::MatrixXf load_eigen_matrix(const std::string& filename)
-{
-  std::cout << "C++: loading matrix from " << filename << std::endl;
-  cnpypp::NpyArray array = cnpypp::npy_load(filename);
-  const auto& shape = array.shape;
-  return Eigen::Map<Eigen::MatrixXf>(array.data<float>(), shape[0], shape[1]);
-}
-
-void save_eigen_matrix(const std::string& filename, const Eigen::MatrixXf& A)
-{
-  std::cout << "C++ saving matrix to " << filename << std::endl;
-  cnpypp::npy_save(filename, &A.data()[0], {static_cast<unsigned long>(A.rows()), static_cast<unsigned long>(A.cols())}, "w", cnpypp::MemoryOrder::Fortran);
-}
-
-void print_eigen_matrix(const Eigen::MatrixXf& A)
-{
-  std::cout << A << std::endl;
-}
+#include "io.h"
 
 int main(int argc, char* argv[])
 {
-  std::string filename = argv[1];
+  std::string npy_file = argv[1];
+  std::string npz_file = argv[2];
 
   Eigen::MatrixXf A {
     {1, 2, 3},
     {4, 5, 6}
   };
 
-  save_eigen_matrix(filename, A);
-  print_eigen_matrix(A);
+  Eigen::MatrixXf B {
+      {1, 5, 9},
+      {4, 6, 8}
+  };
+
+  save_npy(npy_file, A);
+  print_matrix(A);
+
+  std::map<std::string, Eigen::MatrixXf> data;
+  data["A"] = A;
+  data["B"] = B;
+  save_npz(npz_file, data);
+  print_dict(data);
 
   return EXIT_SUCCESS;
 }

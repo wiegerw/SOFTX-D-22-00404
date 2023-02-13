@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.10)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.16)
 project(CNPYpp LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -13,14 +13,4 @@ include_directories(include)
 add_library(cnpy++ "src/cnpy++.cpp")
 target_link_libraries(cnpy++ PRIVATE libzip::zip)
 
-add_executable(example1 "examples/example1.cpp")
-target_link_libraries(example1 cnpy++)
-
-add_executable(example2 "examples/example2.cpp")
-target_link_libraries(example2 cnpy++)
-
-add_executable(save "examples/save.cpp")
-target_link_libraries(save cnpy++ Eigen3::Eigen)
-
-add_executable(load "examples/load.cpp")
-target_link_libraries(load cnpy++ Eigen3::Eigen)
+add_subdirectory(examples)

@@ -1,24 +1,15 @@
 #!/usr/bin/env python3
 
 import sys
-import numpy as np
-
-
-def load_eigen_matrix(filename: str) -> np.ndarray:
-    print(f"Loading matrix from {filename}")
-    return np.load(filename)
-
-
-def save_eigen_matrix(filename: str, A: np.ndarray) -> None:
-    print(f"Saving matrix to {filename}")
-    np.save(filename, A)
-
-
-def print_eigen_matrix(A: np.ndarray):
-    print(A)
+from python_io import *
 
 
 if __name__ == '__main__':
-    filename = sys.argv[1]
-    A = load_eigen_matrix(filename)
-    print_eigen_matrix(A)
+    npy_file = sys.argv[1]
+    npz_file = sys.argv[2]
+
+    A = load(npy_file)
+    print_matrix(A)
+
+    data = load(npz_file)
+    print_dict(data)

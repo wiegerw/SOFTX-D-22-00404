@@ -2,29 +2,27 @@
 
 import sys
 import numpy as np
-
-
-def load_eigen_matrix(filename: str) -> np.ndarray:
-    print(f"Loading matrix from {filename}")
-    return np.load(filename)
-
-
-def save_eigen_matrix(filename: str, A: np.ndarray) -> None:
-    print(f"Saving matrix to {filename}")
-    np.save(filename, A)
-
-
-def print_eigen_matrix(A: np.ndarray):
-    print(A)
+from python_io import *
 
 
 if __name__ == '__main__':
-    filename = sys.argv[1]
+    npy_file = sys.argv[1]
+    npz_file = sys.argv[2]
 
     A = np.array([
       [1, 2, 3],
       [4, 5, 6]
     ], dtype=np.float32)
 
-    save_eigen_matrix(filename, A)
-    print_eigen_matrix(A)
+    B = np.array([
+        [1, 5, 9],
+        [4, 6, 8]
+    ], dtype=np.float32)
+
+    data = {'A': A, 'B': B}
+
+    save_npy(npy_file, A)
+    print_matrix(A)
+
+    save_npz(npz_file, data)
+    print_dict(data)
